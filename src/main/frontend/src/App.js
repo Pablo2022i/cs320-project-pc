@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import { useNavigate } from 'react-router-dom';
 
 function App() { //useState variables
   const [firstName, setFirstName] = useState(''); 
   const [lastName, setLastName] = useState(''); 
   const [message, setMessage] = useState(''); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault(); 
@@ -19,6 +21,10 @@ function App() { //useState variables
       const text = await response.text();
       setMessage(text);
     };
+
+    const navigateToPage2 = () => {
+      navigate('/Home');
+    }
 
     return (
       <div className="container">
@@ -41,6 +47,8 @@ function App() { //useState variables
           <button type="submit">Submit</button>
         </form>
         {message && <p>{message}</p>} 
+        <br />
+        <button onClick = {navigateToPage2}>Home</button>
       </div>
     );
   }
