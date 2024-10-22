@@ -1,4 +1,5 @@
 package org.acme;
+import org.acme.UserName;
 
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -10,7 +11,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/hello")
@@ -29,23 +29,34 @@ public class GreetingResource {
         return "Hello " + name;
     }
 
+    //When we create a user and store in database (Postman trial)
     @POST
-    @Path("/submit-name")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/personalized/{name}")
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
-    public Response submitName(Person person) {
-        UserName userName = new UserName(person.getFirst(), person.getLast(), person.getPhone(), person.getEmail(), person.getMessage());
+    public String personalizedHelloPost(@PathParam("name") String name) {
+        UserName userName = new UserName(name);
         userName.persist();
-        return Response.ok("Hello " + person.getFirst() + "! Your information has been stored in the database.").build();
+        return "Hello " + name + "! Your name has been stored in the database.";
     }
 
+    @POST
+    @Path("/personalized")
+    @Consumes(MediaType.APPLICATION_JSON) // Had to add this annotation to expect JSON
+    @Produces(MediaType.TEXT_PLAIN)
+    public String personalizedHelloPost(Person p ) {
+        return "Hello " + p.getFirst() + " " + p.getLast();
+    }
+
+    //To fetch all users from the database -- http://localhost:8080/hello/users
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserName> getAllUsers() {
         return UserName.listAll();
     }
+
+    //To update a user's name -- http://localhost:8080/hello/personalized/{id}/{new name}
 
     @PATCH
     @Path("/personalized/{id}/{newName}")
@@ -56,11 +67,11 @@ public class GreetingResource {
         if (user == null) {
             return "User not found!";
         }
-        user.first = newName;
-        user.persist();
+        user.name = newName;
         return "User's name updated to " + newName;
     }
 
+    //To remove a user from the database -- http://localhost:8080/hello/personalized/{id}
     @DELETE
     @Path("/personalized/{id}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -77,39 +88,10 @@ public class GreetingResource {
     public static class Person {
         private String first;
         private String last;
-        private String phone; 
-        private String email; 
-        private String message; 
 
-        public String getFirst() {
-            return first;
-        }
-        public void setFirst(String first) {
-            this.first = first;
-        }
-        public String getLast() {
-            return last;
-        }
-        public void setLast(String last) {
-            this.last = last;
-        }
-        public String getPhone() {
-            return phone;
-        }
-        public void setPhone(String phone) {
-            this.phone = phone;
-        }
-        public String getEmail() {
-            return email;
-        }
-        public void setEmail(String email) {
-            this.email = email;
-        }
-        public String getMessage() {
-            return message;
-        }
-        public void setMessage(String message) {
-            this.message = message;
-        }
+        public String getFirst() { return first; }
+        public void setFirst(String first) { this.first = first; }
+        public String getLast() { return last; }
+        public void setLast(String last) { this.last = last; }
     }
 }
