@@ -67,7 +67,7 @@ const Home = () => {
 
   return (
     <div className='home'>
-      <h2>Welcome to Eternal Flowers</h2>
+      <h2>Welcome to Eternal Flower\s</h2>
       <p>Handcrafted creations that last a lifetime.</p>
       <img src='/assets/images/eternal-flowers.jpg' alt="Eternal Flowers" className="home-image" />
       
