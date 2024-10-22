@@ -5,6 +5,7 @@ import App from './App';
 import Home from './Home';
 import Navbar from './navbar';
 import Products from './Products';
+import Cart from './Cart';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 
@@ -17,7 +18,8 @@ root.render(
     <Routes>
       <Route path="/" element={<App/>}/>
       <Route path="/Home" element={<Home/>}/> 
-      <Route path="Products" element={<Products/>}/>
+      <Route path="/Products" element={<Products/>}/>
+      <Route path="/Cart" element={<Cart/>}/>
       <Route path="*" element={<App />} /> 
     </Routes>
     </BrowserRouter>
