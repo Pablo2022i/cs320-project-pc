@@ -1,0 +1,28 @@
+nav {
+  background-color: #28a745;
+  padding: 10px;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+      flex-direction: column;
+  }
+}

@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import Home from './Home';
 import Navbar from './navbar';
+import Products from './Products';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 
@@ -16,7 +17,8 @@ root.render(
     <Routes>
       <Route path="/" element={<App/>}/>
       <Route path="/Home" element={<Home/>}/> 
-      <Route path="*" element={<App />} />  {/* Catch-all route */}
+      <Route path="Products" element={<Products/>}/>
+      <Route path="*" element={<App />} /> 
     </Routes>
     </BrowserRouter>
   </React.StrictMode>
