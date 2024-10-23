@@ -7,8 +7,9 @@ const Home = () => {
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState(''); 
+  const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleSubmitName = async (e) => {
     e.preventDefault();
@@ -30,15 +31,15 @@ const Home = () => {
       setErrorMessage('Please enter a valid email address.');
       return;
     }
-    if (!message || message.trim() === '') { 
+    if (!message || message.trim() === '') {
       setErrorMessage('Message is required and cannot be blank.');
       return;
     }
 
-    const formData = { name, lastName, phone, email, message }; 
+    const formData = { name, lastName, phone, email, message };
 
     try {
-      const response = await fetch('/submit-name', {
+      const response = await fetch('/hello/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,12 +48,12 @@ const Home = () => {
       });
 
       if (response.ok) {
-        alert('Your information has been submitted successfully!');
+        setSuccessMessage('Your information has been submitted successfully!'); // Show success message
         setName('');
         setLastName('');
         setPhone('');
         setEmail('');
-        setMessage(''); 
+        setMessage('');
         setErrorMessage('');
       } else if (response.status === 400) {
         const error = await response.json();
@@ -67,10 +68,10 @@ const Home = () => {
 
   return (
     <div className='home'>
-      <h2>Welcome to Eternal Flower\s</h2>
+      <h2>Welcome to Eternal Flowers</h2>
       <p>Handcrafted creations that last a lifetime.</p>
       <img src='/assets/images/eternal-flowers.jpg' alt="Eternal Flowers" className="home-image" />
-      
+
       <div className="shop-now-button">
         <button>
           <Link to="/Products">Shop Now</Link>
@@ -92,6 +93,7 @@ const Home = () => {
       {/* Contact Us Form */}
       <h2>Contact Us</h2>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>} {/* Display success message */}
       <form onSubmit={handleSubmitName}>
         <input
           type="text"
@@ -124,8 +126,8 @@ const Home = () => {
         />
         <textarea
           placeholder="Your Message"
-          value={message} 
-          onChange={(e) => setMessage(e.target.value)} 
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           required
           style={{ width: '25%', height: '100px', marginTop: '10px', marginBottom: '20px' }}
         ></textarea>

@@ -1,15 +1,10 @@
-package org.acme;
-import org.acme.UserName;
+package org.acme; // Adjust this based on your package structure
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -29,34 +24,31 @@ public class GreetingResource {
         return "Hello " + name;
     }
 
-    //When we create a user and store in database (Postman trial)
     @POST
-    @Path("/personalized/{name}")
+    @Path("/contact")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
-    public String personalizedHelloPost(@PathParam("name") String name) {
-        UserName userName = new UserName(name);
-        userName.persist();
-        return "Hello " + name + "! Your name has been stored in the database.";
+    public String createContactMessage(ContactMessage contactMessage) {
+        // Validate input
+        if (contactMessage.getEmail() == null || contactMessage.getEmail().isEmpty() ||
+            contactMessage.getName() == null || contactMessage.getName().isEmpty() ||
+            contactMessage.getLastName() == null || contactMessage.getLastName().isEmpty() || // Validate last name
+            contactMessage.getPhone() == null || contactMessage.getPhone().isEmpty() || // Validate phone
+            contactMessage.getMessage() == null || contactMessage.getMessage().isEmpty()) {
+            throw new WebApplicationException("All fields are required.", 400);
+        }
+        // Persist the contact message
+        contactMessage.persist();
+        return "Contact message submitted successfully!";
     }
 
-    @POST
-    @Path("/personalized")
-    @Consumes(MediaType.APPLICATION_JSON) // Had to add this annotation to expect JSON
-    @Produces(MediaType.TEXT_PLAIN)
-    public String personalizedHelloPost(Person p ) {
-        return "Hello " + p.getFirst() + " " + p.getLast();
-    }
-
-    //To fetch all users from the database -- http://localhost:8080/hello/users
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserName> getAllUsers() {
         return UserName.listAll();
     }
-
-    //To update a user's name -- http://localhost:8080/hello/personalized/{id}/{new name}
 
     @PATCH
     @Path("/personalized/{id}/{newName}")
@@ -65,13 +57,12 @@ public class GreetingResource {
     public String updateUserName(@PathParam("id") Long id, @PathParam("newName") String newName) {
         UserName user = UserName.findById(id);
         if (user == null) {
-            return "User not found!";
+            throw new WebApplicationException("User not found!", 404);
         }
         user.name = newName;
         return "User's name updated to " + newName;
     }
 
-    //To remove a user from the database -- http://localhost:8080/hello/personalized/{id}
     @DELETE
     @Path("/personalized/{id}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -81,17 +72,7 @@ public class GreetingResource {
         if (deleted) {
             return "The user has been deleted successfully";
         } else {
-            return "User not found";
+            throw new WebApplicationException("User not found", 404);
         }
-    }
-
-    public static class Person {
-        private String first;
-        private String last;
-
-        public String getFirst() { return first; }
-        public void setFirst(String first) { this.first = first; }
-        public String getLast() { return last; }
-        public void setLast(String last) { this.last = last; }
     }
 }
