@@ -1,30 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Cart.css';
 
-const Cart = () => {
-  const [cartItems, setCartItems] = useState([{ name: 'Rose', quantity: 1, price: 10 }]);
+const Cart = ({ cartItems = [], setCartItems }) => {
+  const handleRemove = (productId) => {
+    setCartItems(cartItems.filter(item => item.id !== productId));
+  };
 
-  const handleRemove = (itemName) => {
-    const updatedCart = cartItems.filter(item => item.name !== itemName);
-    setCartItems(updatedCart);
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
   };
 
   return (
-    <div className='cart'>
+    <div className="cart">
       <h2>Your Cart</h2>
       {cartItems.length > 0 ? (
-        <ul>
-          {cartItems.map(item => (
-            <li key={item.name}>
-              {item.name} - ${item.price} x {item.quantity}
-              <button onClick={() => handleRemove(item.name)}>Remove</button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul>
+            {cartItems.map(item => (
+              <li key={item.id}>
+                {item.name} - ${item.price.toFixed(2)} x {item.quantity}
+                <button onClick={() => handleRemove(item.id)}>Remove</button>
+              </li>
+            ))}
+          </ul>
+          <p>Total: ${calculateTotal()}</p>
+          <button>Proceed to Checkout</button>
+        </>
       ) : (
         <p>Your cart is empty.</p>
       )}
-      <button>Proceed to Checkout</button>
     </div>
   );
 };

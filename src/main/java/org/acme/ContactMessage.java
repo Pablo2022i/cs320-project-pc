@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 public class ContactMessage extends PanacheEntity {
     private String email;
     private String name;
-    private String lastName; // Add lastName field
-    private String phone; // Add phone field
+    private String lastName; 
+    private String phone; 
     private String message;
 
     // Default constructor
@@ -37,7 +37,7 @@ public class ContactMessage extends PanacheEntity {
         return lastName;
     }
 
-    public void setLastName(String lastName) { // Add setter for lastName
+    public void setLastName(String lastName) { 
         this.lastName = lastName;
     }
 
@@ -45,7 +45,7 @@ public class ContactMessage extends PanacheEntity {
         return phone;
     }
 
-    public void setPhone(String phone) { // Add setter for phone
+    public void setPhone(String phone) { 
         this.phone = phone;
     }
 

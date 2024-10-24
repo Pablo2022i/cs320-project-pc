@@ -1,4 +1,4 @@
-package org.acme; // Adjust this based on your package structure
+package org.acme;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
@@ -24,25 +24,35 @@ public class GreetingResource {
         return "Hello " + name;
     }
 
+    // Error handling for contact message creation
     @POST
     @Path("/contact")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
     public String createContactMessage(ContactMessage contactMessage) {
-        // Validate input
-        if (contactMessage.getEmail() == null || contactMessage.getEmail().isEmpty() ||
-            contactMessage.getName() == null || contactMessage.getName().isEmpty() ||
-            contactMessage.getLastName() == null || contactMessage.getLastName().isEmpty() || // Validate last name
-            contactMessage.getPhone() == null || contactMessage.getPhone().isEmpty() || // Validate phone
-            contactMessage.getMessage() == null || contactMessage.getMessage().isEmpty()) {
-            throw new WebApplicationException("All fields are required.", 400);
+        if (contactMessage.getEmail() == null || contactMessage.getEmail().isEmpty()) {
+            throw new WebApplicationException("Email is required.", 400);
         }
+        if (contactMessage.getName() == null || contactMessage.getName().isEmpty()) {
+            throw new WebApplicationException("Name is required.", 400);
+        }
+        if (contactMessage.getLastName() == null || contactMessage.getLastName().isEmpty()) {
+            throw new WebApplicationException("Last name is required.", 400);
+        }
+        if (contactMessage.getPhone() == null || contactMessage.getPhone().isEmpty()) {
+            throw new WebApplicationException("Phone number is required.", 400);
+        }
+        if (contactMessage.getMessage() == null || contactMessage.getMessage().isEmpty()) {
+            throw new WebApplicationException("Message cannot be empty.", 400);
+        }
+
         // Persist the contact message
         contactMessage.persist();
         return "Contact message submitted successfully!";
     }
 
+    // Get all users
     @GET
     @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +60,7 @@ public class GreetingResource {
         return UserName.listAll();
     }
 
+    // Update a user's name
     @PATCH
     @Path("/personalized/{id}/{newName}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -63,6 +74,7 @@ public class GreetingResource {
         return "User's name updated to " + newName;
     }
 
+    // Delete a user by ID
     @DELETE
     @Path("/personalized/{id}")
     @Produces(MediaType.TEXT_PLAIN)
