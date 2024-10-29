@@ -51,37 +51,24 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* Message styling */
 .message {
-  color: red;
-  margin-top: 10px;
   font-size: 0.9em;
+  margin-top: 10px;
 }
 
+.error-message {
+  color: red;
+}
+
+.success-message {
+  color: green;
+}
+
+/* Link styling */
 .account-options {
   margin-top: 20px;
 }
-
-.link {
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.link:hover {
-  color: #0056b3;
-}
-
-.quick-links button {
-  margin-top: 10px;
-  width: 150px;
-  background-color: #28a745;
-}
-
-.quick-links button:hover {
-  background-color: #218838;
-}
-
-/* Additional styles for App.css */
 
 .link-group {
   display: flex;
@@ -102,13 +89,24 @@ button:hover {
   color: #0056b3;
 }
 
-.highlight {
-  font-weight: bold;
+/* Highlight styling for "Register now" */
+.highlight-link {
+  color: #007bff; /* Light blue color */
+  cursor: pointer;
   text-decoration: underline;
 }
 
-.error-message {
-  color: red;
-  font-size: 0.9em;
+.highlight-link:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
+/* Quick links button styling */
+.quick-links button {
   margin-top: 10px;
+  width: 150px;
+  background-color: #28a745;
+}
+
+.quick-links button:hover {
+  background-color: #218838;
 }

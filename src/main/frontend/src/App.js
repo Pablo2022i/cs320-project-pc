@@ -6,12 +6,14 @@ function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
     if (!email.includes('@') || password.length < 8) {
       setMessage("The email or password might be incorrect.");
+      setMessageType('error');
       setTimeout(() => setMessage(''), 5000);
       return;
     }
@@ -28,15 +30,15 @@ function App() {
         localStorage.setItem('isLoggedIn', true);
         localStorage.setItem('user', JSON.stringify(data.user));
         setMessage("Login successful!");
-        setTimeout(() => {
-          setMessage('');
-          navigate('/Home');
-        }, 1000);
+        setMessageType('success');
+        setTimeout(() => navigate('/Home'), 1000);
       } else {
         setMessage("Invalid credentials. Please try again.");
+        setMessageType('error');
       }
     } catch (error) {
       setMessage("Server error. Please try again later.");
+      setMessageType('error');
     }
 
     setTimeout(() => setMessage(''), 5000);
@@ -62,12 +64,13 @@ function App() {
           required
         />
         <button type="submit">Login</button>
-        {message && <p className="error-message" style={{ color: 'red' }}>{message}</p>}
+        {message && (
+          <p className={messageType === 'success' ? 'success-message' : 'error-message'}>
+            {message}
+          </p>
+        )}
         <div className="link-group">
-        <span>
-          Don't have an account?{' '}
-          <span onClick={() => navigate('/register')} className="link">Register now</span>
-          </span>
+          <span>Don’t have an account? <span onClick={() => navigate('/register')} className="highlight-link">Register now</span></span>
           <span onClick={() => navigate('/ForgotPassword')} className="link">Recover Account</span>
         </div>
       </form>

@@ -1,34 +1,57 @@
 .register-container {
-    width: 300px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  
-  .register-container input {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 8px;
-  }
-  
-  .register-container button {
-    padding: 8px 16px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .register-container button:hover {
-    background-color: #218838;
-  }
-  
-  .login-link {
-    color: #007bff;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  .login-link:hover {
-    color: #0056b3;
-  }
-  
+  width: 300px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.register-container input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+}
+
+.register-container button {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.register-container button:hover {
+  background-color: #218838;
+}
+
+.login-link {
+  color: #007bff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.login-link:hover {
+  color: #0056b3;
+}
+
+/* Message Styles */
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+.success-message {
+  color: green;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+/* Link styling inside groups */
+.link-group .link {
+  color: blue;
+  cursor: pointer;
+}
+
+.link-group .link:hover {
+  color: darkblue;
+}
