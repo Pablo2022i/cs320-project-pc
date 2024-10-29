@@ -104,7 +104,7 @@ const Register = () => {
       {message && <p className={messageClass}>{message}</p>}
       <div>
         <span>Already have an account? </span>
-        <span className="login-link" onClick={() => navigate('/')}>
+        <span className="login-link" onClick={() => navigate('/Login')}>
           <span className="highlight">Log in here</span>
         </span>
       </div>

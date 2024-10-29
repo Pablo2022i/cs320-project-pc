@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import Products from './Products';
+import Home from './Home'; // Import Home component for signed-in view
 
 function App({ setCartCount }) {
   const [email, setEmail] = useState('');
@@ -9,24 +10,27 @@ function App({ setCartCount }) {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cartItems, setCartItems] = useState([]); // Ensure cartItems is initialized as an array
+  const [cartItems, setCartItems] = useState([]); // Initialize cartItems here
   const navigate = useNavigate();
 
   // Email and password validation functions
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
-  // Initialize the cart on login status change
-  useEffect(() => {
+  // Function to initialize cart based on login status
+  const initializeCart = () => {
     if (isLoggedIn) {
       const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
-      setCartItems(Array.isArray(userCart) ? userCart : []); // Ensure it's an array
+      setCartItems(userCart);
       setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
     } else {
       setCartItems([]);
       setCartCount(0);
-      localStorage.removeItem('guestCart');
     }
+  };
+
+  useEffect(() => {
+    initializeCart();
   }, [isLoggedIn]);
 
   const handleLogin = async (event) => {
@@ -60,9 +64,12 @@ function App({ setCartCount }) {
         setIsLoggedIn(true);
 
         const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
-        setCartItems(Array.isArray(userCart) ? userCart : []);
+        setCartItems(userCart);
         setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
-        setTimeout(() => navigate('/Home'), 1000);
+
+        setTimeout(() => {
+          navigate('/Home'); // Redirect directly to home page
+        }, 1000);
       } else {
         setMessage("Invalid credentials. Please try again.");
         setMessageType('error');
@@ -109,12 +116,7 @@ function App({ setCartCount }) {
           </form>
         </div>
       ) : (
-        <Products
-          setCartCount={setCartCount}
-          isLoggedIn={isLoggedIn}
-          cartItems={cartItems}
-          setCartItems={setCartItems}
-        />
+        <Home /> // Show Home component if user is signed in
       )}
     </div>
   );

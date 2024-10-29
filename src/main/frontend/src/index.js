@@ -43,13 +43,14 @@ const Root = () => {
     <BrowserRouter>
       <Navbar cartCount={cartCount} />
       <Routes>
-        <Route path="/" element={<App setCartCount={setCartCount} cartItems={cartItems} setCartItems={setCartItems} />} />
+        <Route path="/" element={<Home />} /> {/* Set Home as the default route */}
         <Route path="/Home" element={<Home />} />
+        <Route path="/login" element={<App setCartCount={setCartCount} cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/Products" element={<Products setCartCount={setCartCount} addToCart={addToCart} cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/Cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/ForgotPassword" element={<ForgotPassword />} />
-        <Route path="*" element={<App setCartCount={setCartCount} cartItems={cartItems} setCartItems={setCartItems} />} />
+        <Route path="*" element={<Home />} /> {/* Redirect unknown routes to Home */}
       </Routes>
     </BrowserRouter>
   );
