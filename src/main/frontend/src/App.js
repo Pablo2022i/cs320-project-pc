@@ -11,29 +11,16 @@ function App({ setCartCount, cartItems, setCartItems }) {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('isLoggedIn'));
   const navigate = useNavigate();
 
-  // Email validation function
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  // Password validation function
   const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
-  // Initialize cart based on login status
-  const initializeCart = () => {
+  useEffect(() => {
     if (isLoggedIn) {
-      // Load the saved user cart if logged in
       const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
       setCartItems(userCart);
       setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
-    } else {
-      // Reset cart for guests
-      setCartItems([]);
-      setCartCount(0);
     }
-  };
-
-  useEffect(() => {
-    initializeCart();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, setCartCount, setCartItems]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -65,7 +52,6 @@ function App({ setCartCount, cartItems, setCartItems }) {
         setMessageType('success');
         setIsLoggedIn(true);
 
-        // Load the user's cart after login
         const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
         setCartItems(userCart);
         setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
@@ -84,7 +70,6 @@ function App({ setCartCount, cartItems, setCartItems }) {
   };
 
   const handleSignOut = () => {
-    localStorage.setItem('userCart', JSON.stringify(cartItems)); // Save current cart before sign-out
     setIsLoggedIn(false);
     setCartItems([]); // Clear cart items on sign-out
     setCartCount(0);  // Reset cart count
