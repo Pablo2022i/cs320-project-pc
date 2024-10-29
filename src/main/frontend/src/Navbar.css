@@ -1,4 +1,5 @@
-nav {
+/* Existing Navbar CSS */
+.nav {
   background-color: #28a745;
   padding: 10px;
 }
@@ -21,8 +22,53 @@ nav {
   color: #f0f0f0;
 }
 
+.profile-container {
+  position: relative;
+}
+
+.profile-link {
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+
+.dropdown-content {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  min-width: 150px;
+}
+
+.dropdown-content p,
+.dropdown-content a,
+.dropdown-content button {
+  margin: 5px 0;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+  color: #007bff;
+}
+
+.error {
+  color: red;
+  font-size: 0.9em;
+  text-align: center;
+  margin-top: 5px;
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
   .nav-links {
-      flex-direction: column;
+    flex-direction: column;
   }
 }

@@ -28,10 +28,7 @@ function App() {
         localStorage.setItem('isLoggedIn', true);
         localStorage.setItem('user', JSON.stringify(data.user));
         setMessage("Login successful!");
-        setTimeout(() => {
-          setMessage('');
-          navigate('/Home');
-        }, 1000);
+        navigate('/Home');
       } else {
         setMessage("Invalid credentials. Please try again.");
       }
@@ -62,12 +59,9 @@ function App() {
           required
         />
         <button type="submit">Login</button>
-        {message && <p className="error-message" style={{ color: 'red' }}>{message}</p>}
+        {message && <p className="error-message">{message}</p>}
         <div className="link-group">
-        <span>
-          Don't have an account?{' '}
-          <span onClick={() => navigate('/register')} className="link">Register now</span>
-          </span>
+          <span onClick={() => navigate('/register')} className="link">Don't have an account? Register now</span>
           <span onClick={() => navigate('/ForgotPassword')} className="link">Recover Account</span>
         </div>
       </form>

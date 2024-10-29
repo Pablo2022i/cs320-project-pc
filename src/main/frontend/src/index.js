@@ -6,6 +6,8 @@ import Home from './Home';
 import Navbar from './Navbar';
 import Products from './Products'; 
 import Cart from './Cart'; 
+import Register from './Register';
+import ForgotPassword from './ForgotPassword';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const Root = () => {
@@ -32,6 +34,8 @@ const Root = () => {
         <Route path="/Home" element={<Home />} /> 
         <Route path="/Products" element={<Products addToCart={addToCart} />} /> {/* Pass addToCart */}
         <Route path="/Cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} /> {/* Pass cart state */}
+        <Route path="/register" element={<Register />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="*" element={<App />} />
       </Routes>
     </BrowserRouter>

@@ -31,3 +31,11 @@
 .product button:hover {
     background-color: #218838;
 }
+
+.confirmation-message {
+    color: green;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+  }
+  
