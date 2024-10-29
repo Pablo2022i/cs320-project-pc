@@ -3,7 +3,13 @@ import './Cart.css';
 
 const Cart = ({ cartItems = [], setCartItems }) => {
   const handleRemove = (productId) => {
-    setCartItems(cartItems.filter(item => item.id !== productId));
+    const updatedCartItems = cartItems.filter(item => item.id !== productId);
+    setCartItems(updatedCartItems);
+
+    // Update localStorage if the user is logged in
+    if (localStorage.getItem('isLoggedIn')) {
+      localStorage.setItem('userCart', JSON.stringify(updatedCartItems));
+    }
   };
 
   const calculateTotal = () => {

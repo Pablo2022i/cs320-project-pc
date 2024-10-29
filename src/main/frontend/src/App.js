@@ -8,11 +8,13 @@ function App({ setCartCount, cartItems, setCartItems }) {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('isLoggedIn'));
   const navigate = useNavigate();
 
-  // Email and password validation functions
+  // Email validation function
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  // Password validation function
   const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
   // Initialize cart based on login status
@@ -82,12 +84,12 @@ function App({ setCartCount, cartItems, setCartItems }) {
   };
 
   const handleSignOut = () => {
+    localStorage.setItem('userCart', JSON.stringify(cartItems)); // Save current cart before sign-out
     setIsLoggedIn(false);
     setCartItems([]); // Clear cart items on sign-out
     setCartCount(0);  // Reset cart count
     localStorage.removeItem('isLoggedIn'); // Clear login status
     localStorage.removeItem('user'); // Clear user data
-    localStorage.setItem('userCart', JSON.stringify([])); // Clear the userCart in localStorage
   };
 
   return (
