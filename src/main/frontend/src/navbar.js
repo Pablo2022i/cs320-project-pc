@@ -1,48 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = () => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+const Navbar = ({ cartCount }) => {
+  const userData = localStorage.getItem('user');
+  let user = null;
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+  if (userData) {
     try {
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
+      user = JSON.parse(userData);
     } catch (error) {
-      console.error("Error parsing user data:", error);
+      console.error("Failed to parse user data from localStorage:", error);
     }
-  }, []);
+  }
 
-  const handleSignOut = () => {
+  const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('user');
-    setUser(null);
-    navigate('/');
+    localStorage.removeItem('userCart'); // Clear cart on logout
+    window.location.href = '/login';
   };
 
   return (
-    <nav className='nav'>
-      <div className='nav-links'>
-        <Link to="/Home">Home</Link>
-        <Link to="/Products">Products</Link>
-        <Link to="/Cart">Cart</Link>
+    <nav className="navbar">
+      <h1>Eternal Flowers</h1>
+      <ul className="nav-links">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/products">Products</Link></li>
+        <li>
+          <Link to="/cart">View Cart ({cartCount})</Link>
+        </li>
         {user ? (
-          <div className="dropdown">
-            <span>Profile</span>
-            <div className="dropdown-content">
-              <p>{user.firstName} {user.lastName}</p>
-              <p>{user.email}</p>
-              <button onClick={handleSignOut}>Sign Out</button>
-            </div>
-          </div>
+          <>
+            <li className="profile-name">{user.firstName}</li>
+            <li onClick={handleLogout} style={{ cursor: 'pointer', color: 'white' }}>Logout</li>
+          </>
         ) : (
-          <Link to="/">Login</Link>
+          <li><Link to="/login">Login</Link></li>
         )}
-      </div>
+      </ul>
     </nav>
   );
 };

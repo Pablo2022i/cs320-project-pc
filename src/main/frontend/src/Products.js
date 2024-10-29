@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Products.css';
 
-const Products = ({ addToCart }) => {
-  // State for products, loading, error, and confirmation message
+const Products = ({ setCartCount, isLoggedIn, cartItems, setCartItems }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [message, setMessage] = useState(''); // State for confirmation message
 
-  // Fetch products from the backend
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -28,40 +25,44 @@ const Products = ({ addToCart }) => {
     fetchProducts();
   }, []);
 
-  // Handle add to cart with confirmation message
-  const handleAddToCart = (product) => {
-    addToCart(product);
-    setMessage("Item added to cart!");
-    setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds
+  const addToCart = (product) => {
+    const currentCartItems = Array.isArray(cartItems) ? cartItems : []; // Ensure cartItems is an array
+
+    // Check if the item is already in the cart
+    const existingItem = currentCartItems.find(item => item.id === product.id);
+
+    let updatedCart;
+    if (existingItem) {
+      // Update quantity if item is already in the cart
+      updatedCart = currentCartItems.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      // Add new item to the cart
+      updatedCart = [...currentCartItems, { ...product, quantity: 1 }];
+    }
+
+    setCartItems(updatedCart); // Update cart items
+    setCartCount(updatedCart.reduce((total, item) => total + item.quantity, 0)); // Update cart count
+
+    if (isLoggedIn) {
+      localStorage.setItem('userCart', JSON.stringify(updatedCart));
+    }
   };
 
-  // Display error if there's an error
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  // Display loading message if still loading
-  if (loading) {
-    return <p>Loading products...</p>;
-  }
-
-  // Display message if no products are available
-  if (products.length === 0) {
-    return <p>No products available.</p>;
-  }
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="products">
       <h2>Our Flower Collection</h2>
-      {message && <p className="confirmation-message">{message}</p>} {/* Confirmation message */}
       <div className="product-grid">
-        {products.map((product) => (
+        {products.map(product => (
           <div className="product" key={product.id}>
             <img src={product.img} alt={product.name} />
             <h3>{product.name}</h3>
-            <p>{product.description}</p>
             <p>${product.price.toFixed(2)}</p>
-            <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
+            <button onClick={() => addToCart(product)}>Add to Cart</button>
           </div>
         ))}
       </div>

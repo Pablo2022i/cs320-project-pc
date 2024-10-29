@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
@@ -10,11 +10,20 @@ const Home = () => {
   const [message, setMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
+
+  // Check if user is signed in
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+  const handleSignOut = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
+    navigate('/login'); // Redirect to login page after sign out
+  };
 
   const handleSubmitName = async (e) => {
     e.preventDefault();
 
-    // Frontend validation
     if (!name || name.trim() === '') {
       setErrorMessage('First name is required and cannot be blank.');
       return;
@@ -48,7 +57,7 @@ const Home = () => {
       });
 
       if (response.ok) {
-        setSuccessMessage('Your information has been submitted successfully!'); // Show success message
+        setSuccessMessage('Your information has been submitted successfully!');
         setName('');
         setLastName('');
         setPhone('');
@@ -90,10 +99,17 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Sign-Out Button */}
+      {isLoggedIn && (
+        <div style={{ marginTop: '20px' }}>
+          <button onClick={handleSignOut}>Sign Out</button>
+        </div>
+      )}
+
       {/* Contact Us Form */}
       <h2>Contact Us</h2>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {successMessage && <p className="success-message">{successMessage}</p>} {/* Display success message */}
+      {successMessage && <p className="success-message">{successMessage}</p>}
       <form onSubmit={handleSubmitName}>
         <input
           type="text"
