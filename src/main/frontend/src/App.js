@@ -9,12 +9,31 @@ function App() {
   const [messageType, setMessageType] = useState('');
   const navigate = useNavigate();
 
+  // Email validation function
+  const validateEmail = (email) => {
+    return email.includes('@');
+  };
+
+  // Password validation function
+  const validatePassword = (password) => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+
+  // Handle login form submission
   const handleLogin = async (event) => {
     event.preventDefault();
-    if (!email.includes('@') || password.length < 8) {
-      setMessage("The email or password might be incorrect.");
-      setMessageType('error');
-      setTimeout(() => setMessage(''), 5000);
+
+    // Custom validation for email and password
+    if (!validateEmail(email)) {
+      setMessage("Please enter a valid email with '@'.");
+      setMessageType("error");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setMessage("Your email or password might be wrong.");
+      setMessageType("error");
       return;
     }
 
