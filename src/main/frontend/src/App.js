@@ -9,6 +9,7 @@ function App({ setCartCount, cartItems, setCartItems }) {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('isLoggedIn'));
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem('isAdmin') === 'true');
   const navigate = useNavigate();
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -32,7 +33,7 @@ function App({ setCartCount, cartItems, setCartItems }) {
     }
 
     if (!validatePassword(password)) {
-      setMessage("Password must be at least 8 characters long and include a number and special character.");
+      setMessage("Your password or email might be incorrect.");
       setMessageType("error-message");
       return;
     }
@@ -46,11 +47,23 @@ function App({ setCartCount, cartItems, setCartItems }) {
 
       const data = await response.json();
       if (response.ok) {
+        console.log("Login successful. User data:", data.user); // Logging user data to verify admin status
         localStorage.setItem('isLoggedIn', true);
         localStorage.setItem('user', JSON.stringify(data.user));
         setMessage("Login successful!");
         setMessageType('success');
         setIsLoggedIn(true);
+
+        // Check if user is admin
+        if (data.user.isAdmin === 1) {
+          localStorage.setItem('isAdmin', 'true');
+          setIsAdmin(true);
+          console.log("Admin privileges granted."); // Log when admin status is set
+        } else {
+          localStorage.removeItem('isAdmin');
+          setIsAdmin(false);
+          console.log("No admin privileges for this user."); // Log for non-admin users
+        }
 
         const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
         setCartItems(userCart);
@@ -71,10 +84,12 @@ function App({ setCartCount, cartItems, setCartItems }) {
 
   const handleSignOut = () => {
     setIsLoggedIn(false);
+    setIsAdmin(false);
     setCartItems([]); // Clear cart items on sign-out
     setCartCount(0);  // Reset cart count
     localStorage.removeItem('isLoggedIn'); // Clear login status
     localStorage.removeItem('user'); // Clear user data
+    localStorage.removeItem('isAdmin'); // Clear admin status
   };
 
   return (
@@ -118,6 +133,7 @@ function App({ setCartCount, cartItems, setCartItems }) {
             isLoggedIn={isLoggedIn}
             cartItems={cartItems}
             setCartItems={setCartItems}
+            isAdmin={isAdmin} // Pass admin status to Products
           />
         </>
       )}

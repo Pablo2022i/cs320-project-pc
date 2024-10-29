@@ -60,7 +60,7 @@ const Root = () => {
         <Route path="/Cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/ForgotPassword" element={<ForgotPassword />} />
-        <Route path="*" element={<Home />} /> {/* Redirect unknown routes to Home */}
+        <Route path="*" element={<Home />} /> 
       </Routes>
     </BrowserRouter>
   );
