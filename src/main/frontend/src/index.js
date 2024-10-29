@@ -12,7 +12,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const Root = () => {
   const [cartItems, setCartItems] = useState(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const storedCart = isLoggedIn ? JSON.parse(localStorage.getItem('userCart')) || [] : [];
     return storedCart;
   });
 
@@ -22,7 +23,12 @@ const Root = () => {
 
   useEffect(() => {
     // Update local storage and cart count whenever cartItems changes
-    localStorage.setItem('cart', JSON.stringify(cartItems));
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn) {
+      localStorage.setItem('userCart', JSON.stringify(cartItems));
+    } else {
+      localStorage.removeItem('userCart'); // Clear saved user cart if logged out
+    }
     setCartCount(cartItems.reduce((total, item) => total + item.quantity, 0));
   }, [cartItems]);
 
@@ -41,7 +47,7 @@ const Root = () => {
 
   return (
     <BrowserRouter>
-      <Navbar cartCount={cartCount} />
+      <Navbar cartCount={cartCount} setCartItems={setCartItems} />
       <Routes>
         <Route path="/" element={<Home />} /> {/* Set Home as the default route */}
         <Route path="/Home" element={<Home />} />

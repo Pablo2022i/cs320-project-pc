@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = ({ cartCount }) => {
+const Navbar = ({ cartCount, setCartItems }) => {
   const userData = localStorage.getItem('user');
   let user = null;
 
@@ -18,7 +18,8 @@ const Navbar = ({ cartCount }) => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('user');
     localStorage.removeItem('userCart'); // Clear cart on logout
-    window.location.href = '/login';
+    setCartItems([]); // Clear in-memory cart items
+    window.location.href = '/login'; // Redirect to login page
   };
 
   return (

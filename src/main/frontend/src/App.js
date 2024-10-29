@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 import Products from './Products';
-import Home from './Home'; // Import Home component for signed-in view
 
-function App({ setCartCount }) {
+function App({ setCartCount, cartItems, setCartItems }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cartItems, setCartItems] = useState([]); // Initialize cartItems here
   const navigate = useNavigate();
 
   // Email and password validation functions
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
-  // Function to initialize cart based on login status
+  // Initialize cart based on login status
   const initializeCart = () => {
     if (isLoggedIn) {
+      // Load the saved user cart if logged in
       const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
       setCartItems(userCart);
       setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
     } else {
+      // Reset cart for guests
       setCartItems([]);
       setCartCount(0);
     }
@@ -63,13 +63,12 @@ function App({ setCartCount }) {
         setMessageType('success');
         setIsLoggedIn(true);
 
+        // Load the user's cart after login
         const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
         setCartItems(userCart);
         setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
 
-        setTimeout(() => {
-          navigate('/Home'); // Redirect directly to home page
-        }, 1000);
+        setTimeout(() => navigate('/Home'), 1000);
       } else {
         setMessage("Invalid credentials. Please try again.");
         setMessageType('error');
@@ -80,6 +79,15 @@ function App({ setCartCount }) {
     }
 
     setTimeout(() => setMessage(''), 5000);
+  };
+
+  const handleSignOut = () => {
+    setIsLoggedIn(false);
+    setCartItems([]); // Clear cart items on sign-out
+    setCartCount(0);  // Reset cart count
+    localStorage.removeItem('isLoggedIn'); // Clear login status
+    localStorage.removeItem('user'); // Clear user data
+    localStorage.setItem('userCart', JSON.stringify([])); // Clear the userCart in localStorage
   };
 
   return (
@@ -116,7 +124,15 @@ function App({ setCartCount }) {
           </form>
         </div>
       ) : (
-        <Home /> // Show Home component if user is signed in
+        <>
+          <button onClick={handleSignOut}>Sign Out</button>
+          <Products
+            setCartCount={setCartCount}
+            isLoggedIn={isLoggedIn}
+            cartItems={cartItems}
+            setCartItems={setCartItems}
+          />
+        </>
       )}
     </div>
   );
