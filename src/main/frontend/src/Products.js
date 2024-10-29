@@ -46,10 +46,12 @@ const Products = ({ setCartCount, isLoggedIn, cartItems, setCartItems, isAdmin }
 
   const handleEditProduct = (product) => {
     console.log("Editing product:", product);
+    // Additional code for editing the product goes here
   };
 
   const handleAddNewProduct = () => {
     console.log("Adding a new product");
+    // Additional code for adding a new product goes here
   };
 
   if (loading) return <p>Loading products...</p>;
@@ -69,6 +71,7 @@ const Products = ({ setCartCount, isLoggedIn, cartItems, setCartItems, isAdmin }
               <button 
                 onClick={() => handleEditProduct(product)} 
                 className="edit-button"
+                style={{ position: 'absolute', top: '10px', right: '10px' }}
               >
                 Edit
               </button>

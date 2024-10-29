@@ -11,18 +11,20 @@ import ForgotPassword from './ForgotPassword';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const Root = () => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('isLoggedIn'));
+  const userId = JSON.parse(localStorage.getItem('user'))?.id; // Retrieve user ID from localStorage
 
   const [cartItems, setCartItems] = useState(() => {
-    // Load cart from userCart in localStorage if logged in
-    if (isLoggedIn) {
-      return JSON.parse(localStorage.getItem('userCart')) || [];
-    } else {
-      return [];
+    // Load cart from user-specific key if logged in
+    if (isLoggedIn && userId) {
+      const savedCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
+      console.log("Loaded saved cart for user:", savedCart); // Debug log
+      return savedCart;
     }
+    return [];
   });
 
-  const [cartCount, setCartCount] = useState(() => 
+  const [cartCount, setCartCount] = useState(() =>
     cartItems.reduce((total, item) => total + item.quantity, 0)
   );
 
@@ -30,17 +32,18 @@ const Root = () => {
     // Update cart count based on cartItems array
     setCartCount(cartItems.reduce((total, item) => total + item.quantity, 0));
     
-    // Only save cartItems in localStorage if user is logged in
-    if (isLoggedIn) {
-      localStorage.setItem('userCart', JSON.stringify(cartItems));
+    // Save cartItems in localStorage under user-specific key if logged in
+    if (isLoggedIn && userId) {
+      console.log("Saving cart for user:", cartItems); // Debug log
+      localStorage.setItem(`cart_${userId}`, JSON.stringify(cartItems));
     }
-  }, [cartItems, isLoggedIn]);
+  }, [cartItems, isLoggedIn, userId]);
 
   const addToCart = (product) => {
-    setCartItems(prevCartItems => {
-      const existingProduct = prevCartItems.find(item => item.id === product.id);
+    setCartItems((prevCartItems) => {
+      const existingProduct = prevCartItems.find((item) => item.id === product.id);
       if (existingProduct) {
-        return prevCartItems.map(item => 
+        return prevCartItems.map((item) =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
@@ -49,13 +52,35 @@ const Root = () => {
     });
   };
 
+  const handleLogout = () => {
+    // Save the current cart to localStorage under the user-specific key
+    if (userId) {
+      localStorage.setItem(`cart_${userId}`, JSON.stringify(cartItems));
+    }
+    // Clear login state and cart items
+    setIsLoggedIn(false);
+    setCartItems([]);
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAdmin');
+  };
+
+  useEffect(() => {
+    // Load the cart again if the login status or user ID changes
+    if (isLoggedIn && userId) {
+      const savedCart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
+      setCartItems(savedCart);
+      console.log("User signed in, loading saved cart:", savedCart); // Debug log
+    }
+  }, [isLoggedIn, userId]);
+
   return (
     <BrowserRouter>
-      <Navbar cartCount={cartCount} setCartItems={setCartItems} />
+      <Navbar cartCount={cartCount} setCartItems={setCartItems} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Home />} /> {/* Home is the default route */}
         <Route path="/Home" element={<Home />} />
-        <Route path="/login" element={<App setCartCount={setCartCount} cartItems={cartItems} setCartItems={setCartItems} />} />
+        <Route path="/login" element={<App setCartCount={setCartCount} cartItems={cartItems} setCartItems={setCartItems} setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/Products" element={<Products setCartCount={setCartCount} addToCart={addToCart} cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/Cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/register" element={<Register />} />

@@ -17,7 +17,9 @@ function App({ setCartCount, cartItems, setCartItems }) {
 
   useEffect(() => {
     if (isLoggedIn) {
-      const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
+      // Retrieve the current user's cart using their ID
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userCart = JSON.parse(localStorage.getItem(`cart_${user.id}`)) || [];
       setCartItems(userCart);
       setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
     }
@@ -65,7 +67,8 @@ function App({ setCartCount, cartItems, setCartItems }) {
           console.log("No admin privileges for this user."); // Log for non-admin users
         }
 
-        const userCart = JSON.parse(localStorage.getItem('userCart')) || [];
+        // Retrieve the user's cart using their ID
+        const userCart = JSON.parse(localStorage.getItem(`cart_${data.user.id}`)) || [];
         setCartItems(userCart);
         setCartCount(userCart.reduce((total, item) => total + item.quantity, 0));
 
@@ -83,6 +86,12 @@ function App({ setCartCount, cartItems, setCartItems }) {
   };
 
   const handleSignOut = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && cartItems.length > 0) {
+      // Save the user's cart before signing out
+      localStorage.setItem(`cart_${user.id}`, JSON.stringify(cartItems));
+    }
+    
     setIsLoggedIn(false);
     setIsAdmin(false);
     setCartItems([]); // Clear cart items on sign-out

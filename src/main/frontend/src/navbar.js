@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = ({ cartCount, setCartItems }) => {
+  const navigate = useNavigate();
+
   const userData = localStorage.getItem('user');
   let user = null;
 
@@ -18,8 +20,9 @@ const Navbar = ({ cartCount, setCartItems }) => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('user');
     localStorage.removeItem('userCart'); // Clear cart on logout
+    localStorage.removeItem('isAdmin'); // Clear admin status if it exists
     setCartItems([]); // Clear in-memory cart items
-    window.location.href = '/login'; // Redirect to login page
+    navigate('/'); // Redirect to home page after logout
   };
 
   return (
@@ -37,7 +40,7 @@ const Navbar = ({ cartCount, setCartItems }) => {
             <li onClick={handleLogout} style={{ cursor: 'pointer', color: 'white' }}>Logout</li>
           </>
         ) : (
-          <li><Link to="/login">Login</Link></li>
+          <li><Link to="/Login">Login</Link></li> 
         )}
       </ul>
     </nav>

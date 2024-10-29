@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -55,9 +57,14 @@ public class AuthResource {
                            .build();
         }
 
-        // Successful login, return a token
-        String token = generateToken(user);
-        return Response.ok(Collections.singletonMap("token", token)).build();
+        // Successful login, include isAdmin in the response
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", "Login successful");
+        responseBody.put("token", generateToken(user)); // Placeholder token
+        responseBody.put("isAdmin", user.isAdmin);      // Include isAdmin status
+        responseBody.put("user", user);                 // Include user details
+
+        return Response.ok(responseBody).build();
     }
 
     // Helper method to hash passwords using BCrypt
