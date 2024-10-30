@@ -72,7 +72,6 @@ public class AuthResource {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    // Helper method to generate a simple token (Replace with JWT for production use)
     private String generateToken(User user) {
         return user.isAdmin ? "admin_token" : "user_token";
     }

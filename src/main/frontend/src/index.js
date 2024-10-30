@@ -32,7 +32,7 @@ const Root = () => {
     // Update cart count based on cartItems array
     setCartCount(cartItems.reduce((total, item) => total + item.quantity, 0));
     
-    // Save cartItems in localStorage under user-specific key if logged in
+    // Save cartItems in localStorage 
     if (isLoggedIn && userId) {
       console.log("Saving cart for user:", cartItems); // Debug log
       localStorage.setItem(`cart_${userId}`, JSON.stringify(cartItems));
@@ -78,7 +78,7 @@ const Root = () => {
     <BrowserRouter>
       <Navbar cartCount={cartCount} setCartItems={setCartItems} onLogout={handleLogout} />
       <Routes>
-        <Route path="/" element={<Home />} /> {/* Home is the default route */}
+        <Route path="/" element={<Home />} /> 
         <Route path="/Home" element={<Home />} />
         <Route path="/login" element={<App setCartCount={setCartCount} cartItems={cartItems} setCartItems={setCartItems} setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/Products" element={<Products setCartCount={setCartCount} addToCart={addToCart} cartItems={cartItems} setCartItems={setCartItems} />} />
