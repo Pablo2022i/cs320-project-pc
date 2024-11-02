@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-cs320projectpc-dev-5c273-authRole",
+      "UnauthRoleArn": "arn:aws:iam::730335528058:role/amplify-cs320projectpc-dev-5c273-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::730335528058:role/amplify-cs320projectpc-dev-5c273-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-cs320projectpc-dev-5c273-deployment",
+      "UnauthRoleName": "amplify-cs320projectpc-dev-5c273-unauthRole",
+      "StackName": "amplify-cs320projectpc-dev-5c273",
+      "StackId": "arn:aws:cloudformation:us-east-1:730335528058:stack/amplify-cs320projectpc-dev-5c273/7f89e610-994d-11ef-bfc6-12ac1fb79e9b",
+      "AmplifyAppId": "d1xh69rc5ihb9o"
+    }
+  }
+}

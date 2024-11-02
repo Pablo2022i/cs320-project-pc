@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
+import { API_URL } from './config';
 
 const Home = () => {
   const [name, setName] = useState('');
@@ -48,7 +49,7 @@ const Home = () => {
     const formData = { name, lastName, phone, email, message };
 
     try {
-      const response = await fetch('/hello/contact', {
+      const response = await fetch(`${API_URL}/hello/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

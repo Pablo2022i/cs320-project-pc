@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Products.css';
+import { API_URL } from './config';
 
 const Products = ({ setCartCount, isLoggedIn, cartItems, setCartItems, isAdmin }) => {
   const [products, setProducts] = useState([]);
@@ -9,7 +10,7 @@ const Products = ({ setCartCount, isLoggedIn, cartItems, setCartItems, isAdmin }
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/products');
+        const response = await fetch(`${API_URL}/products`);
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
